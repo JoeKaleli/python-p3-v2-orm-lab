@@ -62,28 +62,26 @@ class Review:
         # Return the new Review instance
         return new_review
 
+    
     @classmethod
     def instance_from_db(cls, row):
-        """Return an Review instance having the attribute values from the table row."""
-        # Check the dictionary for  existing instance using the row's primary key
-        review_id = row['id']
-        # Check if the instance is already cached
-        if review_id in cls.instance_cache:
-            return cls.instance_cache[review_id]
+     """Return a Review instance having the attribute values from the table row."""
+     # Extract row data
+     review_id, year, summary, employee_id = row  # Unpack the tuple directly
+ 
+     # Check if the instance is already cached
+     if review_id in cls.instance_cache:
+         return cls.instance_cache[review_id]
+ 
+     # Create a new Review instance from the row data
+     new_review = cls(year, summary, employee_id, review_id)
 
-        # Extract row data
-        year = row['year']
-        summary = row['summary']
-        employee_id = row['employee_id']
+     # Add the new instance to the dictionary cache
+     cls.instance_cache[review_id] = new_review
 
-        # Create a new Review instance from the row data
-        new_review = cls(year, summary, employee_id, review_id)
+     # Return the new instance
+     return new_review
 
-        # Add the new instance to the dictionary cache
-        cls.instance_cache[review_id] = new_review
-
-        # Return the new instance
-        return new_review
 
     @classmethod
     def find_by_id(cls, id):

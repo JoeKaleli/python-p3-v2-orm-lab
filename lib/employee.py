@@ -187,4 +187,24 @@ class Employee:
 
     def reviews(self):
         """Return list of reviews associated with current employee"""
-        pass
+        from review import Review  # Import Review here to avoid circular import issues
+
+        # SQL query to select reviews associated with the current employee
+        sql = """
+            SELECT * FROM reviews WHERE employee_id = ?
+        """
+        # Execute the query with the current employee's id
+        CURSOR.execute(sql, (self.id,))
+        # Fetch all rows from the result set
+        rows = CURSOR.fetchall()
+        # Create a list to store Review instances
+        reviews = []
+        # Iterate over the rows and create Review instances
+        for row in rows:
+            # Extract data from the row
+            review_id, year, summary, employee_id = row
+            # Create a Review instance from the row data and append it to the list
+            review = Review(id=review_id, year=year, summary=summary, employee_id=employee_id)
+            reviews.append(review)
+        # Return the list of Review instances
+        return reviews
